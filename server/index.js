@@ -3,23 +3,15 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const app = express();
 const port = process.env.PORT || 4000;
+const GasBookingDatabase = require("./GasBookingDatabase");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const cors = require("cors");
 app.use(cors());
-//mysql connection
-
-const pool = mysql.createPool({
-  connectionLimit: 10,
-  host: "localhost",
-  user: "root",
-
-  database: "gasbooking",
-});
+const gasBookingDatabase = new GasBookingDatabase();
 
 app.post("/api/register", (req, res) => {
   const firstname = req.body.firstname;
-
   const password = req.body.password;
   const lastname = req.body.lastname;
   const username = req.body.username;
@@ -27,9 +19,9 @@ app.post("/api/register", (req, res) => {
   const email = req.body.email;
   const address = req.body.address;
   const phone_number = req.body.phone_number;
-  const comapny = req.body.comapny;
+  const company = req.body.company;
   const sqlInsert =
-    "INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number,comapny) VALUES (?,?,?,?,?,?,?,?,?)";
+    `INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number,company) VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number},'${company}')`;
   pool.query(
     sqlInsert,
     [
@@ -41,12 +33,13 @@ app.post("/api/register", (req, res) => {
       email,
       address,
       phone_number,
-      comapny,
+      company,
     ],
     (err, result) => {
       if (err) {
         console.log(err);
       } else {
+        console.log(result);
         res.send("values inserted");
       }
     }
@@ -66,7 +59,7 @@ app.post("/api/login", (req, res) => {
         const r = {
           username: username,
           password: password,
-          comapny: result[0].comapny,
+          company: result[0].company,
         };
         console.log(result);
         res.send(r);
