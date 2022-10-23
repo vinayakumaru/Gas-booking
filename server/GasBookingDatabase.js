@@ -6,30 +6,27 @@ class GasBookingDatabase {
         this.pool = mysql.createPool({
             connectionLimit: 10,
             host: "localhost",
-            user: "root"
+            user: "root",
+            database: "gasbooking",
         });
-        this.createDatabaseAndTable();
-        console.log("database connected");
+        this.createDatebase();
     }
 
-    createDatabaseAndTable = () => {
+    createDatebase = () => {
         this.pool.query("CREATE DATABASE IF NOT EXISTS gasbooking", (err, result) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("database created");
-                this.pool.query(
-                    "CREATE TABLE IF NOT EXISTS customer (id int NOT NULL AUTO_INCREMENT,firstname varchar(255),lastname varchar(255),username varchar(255),password varchar(255),pincode int,email varchar(255) unique,address varchar(255),phone_number int,company varchar(255),PRIMARY KEY (id))",
-                    (err, result) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("table created");
-                        }
-                    }
-                );
-            }
+            if (err) throw err;
+            this.createTable();
         });
+    };
+
+    createTable = () => {
+        this.pool.query(
+            "CREATE TABLE IF NOT EXISTS customer (id int NOT NULL AUTO_INCREMENT,firstname varchar(255),lastname varchar(255),username varchar(255),password varchar(255),pincode int,email varchar(255) unique,address varchar(255),phone_number int,company varchar(255),PRIMARY KEY (id))",
+            (err, result) => {
+                if (err) throw err;
+                console.log("database connected");
+            }
+        );
     };
 
     register({firstname, lastname, username, password, pincode, email, address, phone_number, company}) {
@@ -65,7 +62,6 @@ class GasBookingDatabase {
         );
     }
 
-    //close the connection pool
     close() {
         this.pool.end();
     }

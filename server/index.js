@@ -23,11 +23,15 @@ app.post("/api/login", (req, res) => {
   if (result) {
     const r = {
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
     };
     res.send(r);
   } else {
-    res.send("auth failed");
+    const r = {
+      username: "",
+      password: "",
+    };
+    res.send(r);
   }
 });
 app.listen(port, () => console.log(`Listening on port ${port}`));
