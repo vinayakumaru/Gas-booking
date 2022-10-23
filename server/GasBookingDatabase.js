@@ -18,7 +18,7 @@ class GasBookingDatabase {
                 console.log(err);
             } else {
                 console.log("database created");
-                pool.query(
+                this.pool.query(
                     "CREATE TABLE IF NOT EXISTS customer (id int NOT NULL AUTO_INCREMENT,firstname varchar(255),lastname varchar(255),username varchar(255),password varchar(255),pincode int,email varchar(255) unique,address varchar(255),phone_number int,company varchar(255),PRIMARY KEY (id))",
                     (err, result) => {
                         if (err) {
@@ -63,6 +63,11 @@ class GasBookingDatabase {
                 }
             }
         );
+    }
+
+    //close the connection pool
+    close() {
+        this.pool.end();
     }
 }
 
