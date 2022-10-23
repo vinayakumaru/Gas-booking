@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
-//import cylinder from './Images/gas-tank.png'
 import cylinder from "./images/gas-tank.png";
 import axios from "axios";
 
@@ -91,7 +90,6 @@ class Register extends Component {
     };
     axios
       .post("http://localhost:4000/api/register", registered)
-
       .then((response) => console.log(response.data));
 
     this.setState({

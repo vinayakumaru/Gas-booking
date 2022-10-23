@@ -6,21 +6,20 @@ class GasBookingDatabase {
         this.pool = mysql.createPool({
             connectionLimit: 10,
             host: "localhost",
-            user: "root",
-            password: "root",
-            database: "gasbooking",
+            user: "root"
         });
-        createDatabaseAndTable();
+        this.createDatabaseAndTable();
+        console.log("database connected");
     }
 
-    createDatabaseAndTable() {
-        pool.query("CREATE DATABASE IF NOT EXISTS gasbooking", (err, result) => {
+    createDatabaseAndTable = () => {
+        this.pool.query("CREATE DATABASE IF NOT EXISTS gasbooking", (err, result) => {
             if (err) {
                 console.log(err);
             } else {
                 console.log("database created");
                 pool.query(
-                    "CREATE TABLE IF NOT EXISTS customer (id int NOT NULL AUTO_INCREMENT,firstname varchar(255),lastname varchar(255),username varchar(255),password varchar(255),pincode int,email varchar(255),address varchar(255),phone_number int,company varchar(255),PRIMARY KEY (id))",
+                    "CREATE TABLE IF NOT EXISTS customer (id int NOT NULL AUTO_INCREMENT,firstname varchar(255),lastname varchar(255),username varchar(255),password varchar(255),pincode int,email varchar(255) unique,address varchar(255),phone_number int,company varchar(255),PRIMARY KEY (id))",
                     (err, result) => {
                         if (err) {
                             console.log(err);
@@ -33,9 +32,9 @@ class GasBookingDatabase {
         });
     };
 
-    insertUser({firstname, lastname, username, password, pincode, email, address, phone_number, company}) {
+    register({firstname, lastname, username, password, pincode, email, address, phone_number, company}) {
         this.pool.query(
-            `INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number,company) VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number},'${company}')`,
+            `INSERT INTO customer VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number},'${company}')`,
             (err, result) => {
                 if (err) {
                     console.log(err);
