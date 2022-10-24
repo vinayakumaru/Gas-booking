@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import "../Style/Login.css";
 import axios from "axios";
+import HomePageNavbar from "../Components/HomePageNavbar";
 
 class Login extends Component {
   constructor(props) {
@@ -63,52 +64,61 @@ class Login extends Component {
   };
   render() {
     return (
-      <div className="division">
-        {this.state.tohome ? (
-          <Navigate to="/booking" />
-        ) : (
-          <div>
+      <>
+        <HomePageNavbar />
+        <div className="division">
+          {this.state.tohome ? (
+            <Navigate to="/booking" />
+          ) : (
             <div>
-              <Link to="/home">
-                ❮<span class="w3-hide-small"> Back</span>
-              </Link>
+              <div>
+                <Link to="/home">
+                  ❮<span class="w3-hide-small"> Back</span>
+                </Link>
+              </div>
+              <h1>User Login</h1>
+              <form onSubmit={this.onsubmit} className="login">
+                <input
+                  type="text"
+                  placeholder="userid"
+                  name="userid"
+                  onChange={this.changeusername}
+                  value={this.state.username}
+                />
+                <br />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  onChange={this.changepaswrd}
+                  value={this.state.password}
+                />
+                <br />
+                <button
+                  type="submit"
+                  className="button"
+                  onClick={this.onsubmit}
+                >
+                  LOGIN
+                </button>
+                <br />
+              </form>
+              <div>
+                <span className="span">
+                  Don't have the account{" "}
+                  <Link to="/register">signup</Link>
+                </span>
+              </div>
+              <div>
+                <span className="span">
+                  Forgot password{" "}
+                  <Link to="/">click here</Link>
+                </span>
+              </div>
             </div>
-            <h1>User Login</h1>
-            <form onSubmit={this.onsubmit} className="login">
-              <input
-                type="text"
-                placeholder="userid"
-                name="userid"
-                onChange={this.changeusername}
-                value={this.state.username}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="Password"
-                name="password"
-                onChange={this.changepaswrd}
-                value={this.state.password}
-              />
-              <br />
-              <button type="submit" className="button" onClick={this.onsubmit}>
-                LOGIN
-              </button>
-              <br />
-            </form>
-            <div>
-              <span className="span">
-                Don't have the account <Link to="/register">signup</Link>
-              </span>
-            </div>
-            <div>
-              <span className="span">
-                Forgot password <Link to="/">click here</Link>
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </>
     );
   }
 }
