@@ -121,7 +121,7 @@ class Register extends Component {
                         <div className="col-xl-6 d-none d-xl-block">
                           <img
                             src={cylinder}
-                            alt="Sample photo"
+                            alt="Sample"
                             className="img-fluid"
                           />
                         </div>

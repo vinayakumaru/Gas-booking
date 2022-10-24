@@ -10,10 +10,29 @@ app.use(cors());
 const gasBookingDatabase = new GasBookingDatabase();
 
 app.post("/api/register", (req, res) => {
-    result = gasBookingDatabase.register(req.body, res);
+    gasBookingDatabase.register(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
 });
 
 app.post("/api/login", (req, res) => {
-    gasBookingDatabase.checkUser(req.body, res);
+    gasBookingDatabase.checkUser(req.body, (status) => {
+        if (status) {
+            res.send({
+                username: req.body.username,
+                password: req.body.password,
+            });
+        } else {
+            res.send({ username: "", password: "" });
+        }
+    });
 });
-app.listen(port, () => console.log(`Listening on port ${port}`));
+
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`)
+    gasBookingDatabase.connect();
+});
