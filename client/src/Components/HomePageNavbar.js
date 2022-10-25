@@ -2,7 +2,7 @@ import React from "react";
 import cylinder from "../Pages/images/gas.png";
 import { Link } from "react-router-dom";
 
-export default function HomePageNavbar() {
+export default function HomePageNavbar(props) {
     return (
         <nav className="navbar navbar-light bg-light border-dark">
             <div className="container-fluid">
@@ -34,8 +34,8 @@ export default function HomePageNavbar() {
                     </div>
                 </Link>
                 <div>
-                    <Link to="/register">
-                        <button className="btn btn-success">Register</button>
+                    <Link to={props.link}>
+                        <button className="btn btn-success" style={{width: "100px"}}>{props.head}</button>
                     </Link>
                 </div>
             </div>

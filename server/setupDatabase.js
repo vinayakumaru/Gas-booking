@@ -31,7 +31,7 @@ function setupTable() {
 
 function setupAdminTable() {
     pool.query(
-        "CREATE TABLE IF NOT EXISTS admin (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(40), lastname VARCHAR(40), username VARCHAR(40) unique not null, password VARCHAR(40), email VARCHAR(40) unique not null, phone_number int)",
+        "CREATE TABLE IF NOT EXISTS admin (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(40), lastname VARCHAR(40), username VARCHAR(40) unique not null, password VARCHAR(40), email VARCHAR(40) unique not null, phone_number bigint)",
         (err, result) => {
             if (err) throw err;
             console.log("admin table created");
@@ -41,7 +41,7 @@ function setupAdminTable() {
 
 function setupCustomerTable() {
     pool.query(
-        "CREATE TABLE IF NOT EXISTS customer (id int AUTO_INCREMENT,firstname varchar(40),lastname varchar(40),username varchar(40) unique not null,password varchar(40),pincode int,email varchar(40) unique not null,address varchar(40),phone_number int,company varchar(40),PRIMARY KEY (id))",
+        "CREATE TABLE IF NOT EXISTS customer (id int AUTO_INCREMENT,firstname varchar(40),lastname varchar(40),username varchar(40) unique not null,password varchar(40),pincode int,email varchar(40) unique not null,address varchar(40),phone_number bigint,company varchar(40),PRIMARY KEY (id))",
         (err, result) => {
             if (err) throw err;
             console.log("customer table created");

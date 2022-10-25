@@ -1,44 +1,23 @@
 import React, { Component } from "react";
-import { Link, Navigate } from "react-router-dom";
-import cylinder from "./images/gas-tank.png";
+import { Navigate } from "react-router-dom";
 import axios from "axios";
+import HomePageNavbar from "../Components/HomePageNavbar";
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: "",
-      lastname: "",
       username: "",
       password: "",
-      pincode: "",
       email: "",
-      address: "",
       phone_number: "",
-      company: "",
       tohome: false,
     };
-    this.changefirstname = this.changefirstname.bind(this);
-    this.changelastname = this.changelastname.bind(this);
     this.changeusername = this.changeusername.bind(this);
     this.changepassword = this.changepassword.bind(this);
-    this.changepincode = this.changepincode.bind(this);
     this.changeemail = this.changeemail.bind(this);
-    this.changeaddress = this.changeaddress.bind(this);
     this.changephonenumber = this.changephonenumber.bind(this);
-    this.changecompany = this.changecompany.bind(this);
-
     this.onSubmit = this.onSubmit.bind(this);
-  }
-  changefirstname(event) {
-    this.setState({
-      firstname: event.target.value,
-    });
-  }
-  changelastname(event) {
-    this.setState({
-      lastname: event.target.value,
-    });
   }
   changeusername(event) {
     this.setState({
@@ -50,19 +29,9 @@ class Register extends Component {
       password: event.target.value,
     });
   }
-  changepincode(event) {
-    this.setState({
-      pincode: event.target.value,
-    });
-  }
   changeemail(event) {
     this.setState({
       email: event.target.value,
-    });
-  }
-  changeaddress(event) {
-    this.setState({
-      address: event.target.value,
     });
   }
   changephonenumber(event) {
@@ -70,23 +39,18 @@ class Register extends Component {
       phone_number: event.target.value,
     });
   }
-  changecompany(event) {
-    this.setState({
-      company: event.target.value,
-    });
-  }
   onSubmit(event) {
     event.preventDefault();
     const registered = {
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
+      firstname: "",
+      lastname: "",
       username: this.state.username,
       password: this.state.password,
-      pincode: this.state.pincode,
+      pincode: null,
       email: this.state.email,
-      address: this.state.address,
+      address: "",
       phone_number: this.state.phone_number,
-      company: this.state.company,
+      company: "",
     };
     axios
       .post("http://localhost:4000/api/register", registered)
@@ -107,195 +71,114 @@ class Register extends Component {
   }
   render() {
     return (
-      <div className="container">
+      <div>
         {this.state.tohome ? (
           <Navigate to="/home" />
         ) : (
-          <div>
-            <section className="h-100 bg-dark">
-              <div className="container py-5 h-100">
-                <div className="row d-flex justify-content-center align-items-center h-100">
-                  <div className="col">
-                    <div className="card card-registration my-4">
-                      <div className="row g-0">
-                        <div className="col-xl-6 d-none d-xl-block">
-                          <img
-                            src={cylinder}
-                            alt="Sample"
-                            className="img-fluid"
-                          />
-                        </div>
-                        <div className="col-xl-6">
-                          <div className="card-body p-md-5 text-black">
-                            <h3 className="mb-5 text-uppercase">
-                              Registration form
-                            </h3>
-
+          <>
+            <HomePageNavbar head="Login" link="/Login"/>
+            <section style={{ height: "80vh" }}>
+              <div
+                className="mask d-flex align-items-center h-100 gradient-custom"
+              >
+                <div className="container">
+                  <div className="row justify-content-center">
+                    <div className="col-12 col-lg-9 col-xl-7">
+                      <div className="card">
+                        <div className="card-body p-4 p-md-5">
+                          <h3 className="mb-4 pb-2">
+                            Registration Form
+                          </h3>
+                          <form>
                             <div className="row">
                               <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
                                     type="text"
-                                    id="form3Example1m"
-                                    onChange={this.changefirstname}
-                                    className="form-control form-control-lg"
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="form3Example1m"
-                                  >
-                                    <strong style={{ color: "red" }}>*</strong>
-                                    First name
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="col-md-6 mb-4">
-                                <div className="form-outline">
-                                  <input
-                                    type="text"
-                                    id="form3Example1n"
-                                    onChange={this.changelastname}
-                                    className="form-control form-control-lg"
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="form3Example1n"
-                                  >
-                                    <strong style={{ color: "red" }}>*</strong>
-                                    Last name
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="row">
-                              <div className="col-md-6 mb-4">
-                                <div className="form-outline">
-                                  <input
-                                    type="text"
-                                    id="form3Example1m1"
+                                    id="username"
+                                    className="form-control"
+                                    value={this.state.username}
                                     onChange={this.changeusername}
-                                    className="form-control form-control-lg"
+                                    required
                                   />
                                   <label
                                     className="form-label"
-                                    htmlFor="form3Example1m1"
+                                    htmlFor="username"
                                   >
-                                    <strong style={{ color: "red" }}>*</strong>
-                                    UserName
+                                    Username
                                   </label>
                                 </div>
                               </div>
                               <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
-                                    type="password"
-                                    id="form3Example1n1"
+                                    type="text"
+                                    id="password"
+                                    className="form-control"
+                                    value={this.state.password}
                                     onChange={this.changepassword}
-                                    className="form-control form-control-lg"
+                                    required
                                   />
                                   <label
                                     className="form-label"
-                                    htmlFor="form3Example1n1"
+                                    htmlFor="password"
                                   >
-                                    <strong style={{ color: "red" }}>*</strong>
                                     Password
                                   </label>
                                 </div>
                               </div>
                             </div>
-                            <div className="form-outline mb-4">
-                              <input
-                                type="text"
-                                id="form3Example8"
-                                onChange={this.changecompany}
-                                className="form-control form-control-lg"
-                              />
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example8"
-                              >
-                                <strong style={{ color: "red" }}>*</strong>
-                                Company
-                              </label>
+                            <div className="row">
+                              <div className="col-md-6 mb-4">
+                                <div className="form-outline">
+                                  <input
+                                    type="email"
+                                    id="emailAddress"
+                                    className="form-control"
+                                    value={this.state.email}
+                                    onChange={this.changeemail}
+                                    required
+                                  />
+                                  <label
+                                    className="form-label"
+                                    htmlFor="emailAddress"
+                                  >
+                                    Email
+                                  </label>
+                                </div>
+                              </div>
+                              <div className="col-md-6 mb-4">
+                                <div className="form-outline">
+                                  <input
+                                    type="tel"
+                                    id="phoneNumber"
+                                    className="form-control"
+                                    value={this.state.phone_number}
+                                    onChange={this.changephonenumber}
+                                    required
+                                  />
+                                  <label
+                                    className="form-label"
+                                    htmlFor="phoneNumber"
+                                  >
+                                    Phone Number
+                                  </label>
+                                </div>
+                              </div>
                             </div>
-
-                            <div className="form-outline mb-4">
-                              <input
-                                type="text"
-                                id="form3Example8"
-                                onChange={this.changeaddress}
-                                className="form-control form-control-lg"
-                              />
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example8"
-                              >
-                                <strong style={{ color: "red" }}>*</strong>
-                                Address
-                              </label>
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="mt-4">
+                                  <input
+                                    className="btn btn-warning btn-lg"
+                                    type="submit"
+                                    onClick={this.onSubmit}
+                                    defaultValue="Submit"
+                                  />
+                                </div>
+                              </div>
                             </div>
-
-                            <div className="form-outline mb-4">
-                              <input
-                                type="text"
-                                id="form3Example90"
-                                onChange={this.changepincode}
-                                className="form-control form-control-lg"
-                              />
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example90"
-                              >
-                                <strong style={{ color: "red" }}>*</strong>
-                                Pincode
-                              </label>
-                            </div>
-
-                            <div className="form-outline mb-4">
-                              <input
-                                type="number"
-                                id="form3Example99"
-                                onChange={this.changephonenumber}
-                                className="form-control form-control-lg"
-                              />
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example99"
-                              >
-                                Phone Number
-                              </label>
-                            </div>
-
-                            <div className="form-outline mb-4">
-                              <input
-                                type="text"
-                                id="form3Example97"
-                                onChange={this.changeemail}
-                                className="form-control form-control-lg"
-                              />
-                              <label
-                                className="form-label"
-                                htmlFor="form3Example97"
-                              >
-                                <strong style={{ color: "red" }}>*</strong>Email
-                                ID
-                              </label>
-                            </div>
-
-                            <div className="d-flex justify-content-end pt-3">
-                              <Link to="/home">
-                                {" "}
-                                <button
-                                  type="button"
-                                  className="btn btn-warning btn-lg ms-2"
-                                  onClick={this.onSubmit}
-                                >
-                                  Submit form
-                                </button>
-                              </Link>
-                            </div>
-                          </div>
+                          </form>
                         </div>
                       </div>
                     </div>
@@ -303,7 +186,7 @@ class Register extends Component {
                 </div>
               </div>
             </section>
-          </div>
+          </>
         )}
       </div>
     );

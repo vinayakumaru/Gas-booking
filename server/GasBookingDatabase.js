@@ -12,7 +12,17 @@ class GasBookingDatabase {
             user: "root",
             database: "gasbooking",
         });
-        console.log("database connected");
+
+        this.pool.query(
+            'select * from Admin',
+            (err, _) => {
+                if (err) {
+                    console.log("unable to connect database");
+                    return;
+                }
+                console.log("connected to database");
+            }
+        );
     }
 
     register(

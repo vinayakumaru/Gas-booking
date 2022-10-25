@@ -7,7 +7,7 @@ import HomePageNavbar from "../Components/HomePageNavbar";
 export default function Home() {
     return (
         <div className="home">
-            <HomePageNavbar />
+            <HomePageNavbar head="Login" link="/Login"/>
             <div className="container1">
                 <div>
                     <Link to="/Login">
