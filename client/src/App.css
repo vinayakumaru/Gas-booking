@@ -4,18 +4,3 @@
     align-items: center;
     height: 80vh;
 }
-.container1 div{
-  text-align: center;
-  margin: 0 2vw;
-  padding: 2vh 2vw;
-  background-color: antiquewhite;
-  border-radius: 10px;
-}
-
-.container1 div h3{
-  text-transform: capitalize;
-}
-
-.container1 div a{
-  text-decoration: none;
-}

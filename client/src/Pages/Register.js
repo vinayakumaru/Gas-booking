@@ -89,7 +89,7 @@ class Register extends Component {
                           <h3 className="mb-4 pb-2">
                             Registration Form
                           </h3>
-                          <form>
+                          <form onSubmit={this.onSubmit}>
                             <div className="row">
                               <div className="col-md-6 mb-4">
                                 <div className="form-outline">
@@ -172,7 +172,6 @@ class Register extends Component {
                                   <input
                                     className="btn btn-warning btn-lg"
                                     type="submit"
-                                    onClick={this.onSubmit}
                                     defaultValue="Submit"
                                   />
                                 </div>

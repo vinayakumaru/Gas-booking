@@ -27,6 +27,7 @@ function setupTable() {
     setupCustomerTable();
     setupDealerTable();
     setupGasTypeTable();
+    setupOrderTable();
 };
 
 function setupAdminTable() {
@@ -61,10 +62,20 @@ function setupDealerTable() {
 
 function setupGasTypeTable() {
     pool.query(
-        "CREATE TABLE IF NOT EXISTS gas (gas_id int AUTO_INCREMENT PRIMARY KEY,company_name varchar(40),gas_type varchar(40),price int)",
+        "CREATE TABLE IF NOT EXISTS gas_type (gas_id int AUTO_INCREMENT PRIMARY KEY,company_name varchar(40),gas_type varchar(40),price int)",
         (err, result) => {
             if (err) throw err;
-            console.log("gas table created");
+            console.log("gas_type table created");
         }
     );
 };
+
+function setupOrderTable() {
+    pool.query(
+        "CREATE TABLE IF NOT EXISTS orders (order_id int AUTO_INCREMENT PRIMARY KEY,username varchar(40),gas_type varchar(40),order_date date)",
+        (err, result) => {
+            if (err) throw err;
+            console.log("orders table created");
+        }
+    );
+}
