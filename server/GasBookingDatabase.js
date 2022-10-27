@@ -12,7 +12,17 @@ class GasBookingDatabase {
             user: "root",
             database: "gasbooking",
         });
-        console.log("database connected");
+
+        this.pool.query(
+            'select * from Admin',
+            (err, _) => {
+                if (err) {
+                    console.log("unable to connect database");
+                    return;
+                }
+                console.log("connected to database");
+            }
+        );
     }
 
     register(
@@ -33,7 +43,7 @@ class GasBookingDatabase {
             `INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number,company) VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number},'${company}')`,
             (err, result) => {
                 if (err) {
-                    console.log(err);
+                    console.log(err.sqlMessage);
                     callback(false);
                     return;
                 }
@@ -56,6 +66,121 @@ class GasBookingDatabase {
                 else callback(false);
             }
         );
+    }
+
+    updateProfile(user, callback) {
+        this.pool.query(
+            `UPDATE customer SET firstname='${user.firstname}',lastname='${user.lastname}',pincode=${user.pincode},address='${user.address}',company='${user.company}' WHERE username='${user.username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err.sqlMessage);
+                    callback(false);
+                    return;
+                }
+                console.log("successfully updated");
+                callback(true);
+            }
+        );
+    }
+
+    getProfile(username, callback) {
+        this.pool.query(
+            `select * from customer where username='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    getOrders(username, callback) {
+        this.pool.query(
+            `select * from orders where username='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    getGasTypes(username,callback) {
+        this.pool.query(
+            `select gas_type,price from gas_type as g join customer as c on g.company_name=c.company where c.username='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    getGasCompanies(callback) {
+        this.pool.query(
+            `select company_name from dealer`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    getGasTypesByCompany(company,callback) {
+        this.pool.query(
+            `select gas_type,price from gas_type where company_name='${company}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    insertOrder(order, callback) {
+        this.pool.query(
+            `INSERT INTO orders (username,gas_type) VALUES ('${order.username}','${order.gas_type}')`,
+            (err, result) => {
+                if (err) {
+                    console.log(err.sqlMessage);
+                    callback(false);
+                    return;
+                }
+                console.log("successfully inserted");
+                callback(true);
+            }
+        );
+    }
+
+    updateCompany({username,company}, callback) {
+        this.pool.query(
+            `UPDATE customer SET company='${company}' WHERE username='${username}'`,
+            (err, _) => {
+                if (err) {
+                    console.log(err.sqlMessage);
+                    callback(false);
+                    return;
+                }
+                console.log("successfully updated");
+                callback(true);
+            }
+        )
     }
 }
 

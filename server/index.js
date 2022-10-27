@@ -32,6 +32,77 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+app.post("/api/book", (req, res) => {
+    gasBookingDatabase.insertOrder(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
+app.post("/api/getOrders", (req, res) => {
+    gasBookingDatabase.getOrders(req.body.username, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post("/api/getProfile", (req, res) => {
+    gasBookingDatabase.getProfile(req.body.username, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post("/api/updateProfile", (req, res) => {
+    gasBookingDatabase.updateProfile(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
+app.post("/api/getGasTypesByCompany", (req, res) => {
+    gasBookingDatabase.getGasTypesByCompany(req.body,(result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post("/api/getGasTypes", (req, res) => {
+    gasBookingDatabase.getGasTypes(req.body,(result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.get("/api/getGasCompanies", (req, res) => {
+    gasBookingDatabase.getGasCompanies((result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
     gasBookingDatabase.connect();

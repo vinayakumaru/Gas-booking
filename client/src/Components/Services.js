@@ -14,6 +14,7 @@ export default function Services({ head, buttonHead }) {
                 padding: "10px",
                 backgroundColor: "#D3F4DE",
                 borderRadius: "10px",
+                marginTop: "3px",
             }}
         >
             <CardContent>

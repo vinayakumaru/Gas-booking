@@ -21,6 +21,7 @@ export default function Booking() {
         </Typography>
         <Box
           display="flex"
+          flexWrap="wrap"
           justifyContent="space-around"
           alignItems="center"
           sx={{

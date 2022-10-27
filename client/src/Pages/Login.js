@@ -65,7 +65,7 @@ class Login extends Component {
   render() {
     return (
       <>
-        <HomePageNavbar />
+        <HomePageNavbar head="Register" link="/Register"/>
         <div className="division">
           {this.state.tohome ? (
             <Navigate to="/booking" />
