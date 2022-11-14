@@ -82,8 +82,18 @@ app.post("/api/getGasTypesByCompany", (req, res) => {
     });
 });
 
-app.post("/api/getGasTypes", (req, res) => {
-    gasBookingDatabase.getGasTypes(req.body,(result) => {
+app.post("/api/getGasTypesByUser", (req, res) => {
+    gasBookingDatabase.getGasTypesByUser(req.body,(result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.get("/api/getGasTypes", (_, res) => {
+    gasBookingDatabase.getGasTypes((result) => {
         if (result.length > 0) {
             res.send(result);
         } else {
@@ -102,6 +112,15 @@ app.get("/api/getGasCompanies", (req, res) => {
     });
 });
 
+app.post('/api/updateCompany', (req, res) => {
+    gasBookingDatabase.updateCompany(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)

@@ -99,7 +99,7 @@ class GasBookingDatabase {
 
     getOrders(username, callback) {
         this.pool.query(
-            `select * from orders where username='${username}'`,
+            `select * from orders join payment on orders.order_id = payment.order_id where username='${username}'`,
             (err, result) => {
                 if (err) {
                     console.log(err);
@@ -111,9 +111,26 @@ class GasBookingDatabase {
         );
     }
 
-    getGasTypes(username,callback) {
+    
+    getGasTypesByUser({username},callback) {
+        console.log(username);
         this.pool.query(
-            `select gas_type,price from gas_type as g join customer as c on g.company_name=c.company where c.username='${username}'`,
+            `select g.gas_type,g.price,g.company_name from gas_type as g inner join customer as c on g.company_name=c.company where c.username='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                console.log(result);
+                callback(result);
+            }
+        );
+    }
+
+    getGasTypes(callback) {
+        this.pool.query(
+            `select gas_type,price,company_name from gas_type`,
             (err, result) => {
                 if (err) {
                     console.log(err);
@@ -124,7 +141,6 @@ class GasBookingDatabase {
             }
         );
     }
-
     getGasCompanies(callback) {
         this.pool.query(
             `select company_name from dealer`,
@@ -155,7 +171,7 @@ class GasBookingDatabase {
 
     insertOrder(order, callback) {
         this.pool.query(
-            `INSERT INTO orders (username,gas_type) VALUES ('${order.username}','${order.gas_type}')`,
+            `CALL insert_to_orders('${order.username}','${order.gas_type}','${order.payment_method}',${order.amount})`,
             (err, result) => {
                 if (err) {
                     console.log(err.sqlMessage);
