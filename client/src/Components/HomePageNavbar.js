@@ -20,7 +20,7 @@ export default function HomePageNavbar(props) {
                                 alt=""
                                 width="40"
                                 height="40"
-                                class="rounded-circle mx-20"
+                                className="rounded-circle mx-20"
                             />
                         </div>
                         <h1

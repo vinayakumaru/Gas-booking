@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from '../Components/Navbar'
-import GasProviders from '../Components/GasProviders'
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import Services from '../Components/Services';
+import { useNavigate } from 'react-router-dom';
 
 export default function Booking() {
+
+  const navigate = useNavigate();
   return (
     <>
       <Navbar />
@@ -30,12 +32,18 @@ export default function Booking() {
             borderRadius: "10px",
           }}
         >
-          <Services head={"Book LPG Gas Cylinder"} buttonHead={"Book"} />
-          <Services head={"Register New LPG Cylinder"} buttonHead={"Register"} />
-          <Services head={"Your Orders"} buttonHead={"View"} />
+          <Services head={"Book LPG Gas Cylinder"} buttonHead={"Book"} onclick={() => {
+            navigate("/bookforgas");
+          }}/>
+          <Services head={"Register New LPG Cylinder"} buttonHead={"Register"} onclick={() => {
+            navigate("/RegisterGas");
+          }} />
+          <Services head={"Your Orders"} buttonHead={"View"} onclick={() => {
+            navigate("/orderhistory");
+          }}/>
         </Box>
       </Box>
-      <GasProviders />
+      
     </>
   )
 }

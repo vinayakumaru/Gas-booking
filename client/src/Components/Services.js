@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
-export default function Services({ head, buttonHead }) {
+export default function Services({ head, buttonHead ,onclick}) {
     return (
         <Card
             elevation={6}
@@ -27,6 +27,8 @@ export default function Services({ head, buttonHead }) {
                     sx={{
                         width: "100px"
                     }}
+
+                    onClick={onclick}
                 >
                     {buttonHead}
                 </Button>

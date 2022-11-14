@@ -30,8 +30,9 @@ export default function ImageAvatars() {
                     },
                 }}
             >
-                {images.map((item) => (
+                {images.map((item,index) => (
                     <Paper
+                        id={index}
                         elevation={3}
                         sx={{
                             width: "100%",

@@ -4,10 +4,12 @@ import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import React, { StrictMode } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import RegisterGas from './Pages/RegisterGas';
 import Booking from "./Pages/Booking";
 import AdminLogin from "./Pages/AdminLogin";
-
+import BookForGas from "./Pages/BookForGas";
+import OrderHistory from "./Pages/OrderHistory";
+import Admin from "./Pages/admin";
 function App() {
   return (
     <StrictMode>
@@ -20,6 +22,10 @@ function App() {
             <Route path="/Login" element={<Login />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/RegisterGas" element={<RegisterGas />} />
+            <Route path="/bookforgas" element={<BookForGas/>} />
+            <Route path="/orderhistory" element={<OrderHistory/>} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </Router>
       </div>

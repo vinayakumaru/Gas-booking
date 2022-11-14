@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import "../Style/Login.css";
 import axios from "axios";
 import HomePageNavbar from "../Components/HomePageNavbar";
+import Cookies from "universal-cookie";
 
 class Login extends Component {
   constructor(props) {
@@ -45,9 +46,12 @@ class Login extends Component {
           res.data.username === this.state.username &&
           res.data.password === this.state.password
         ) {
+          const token = new Cookies();
+          token.set('username', res.data.username, { path: "/", maxAge: 604800 })
           this.setState({
             tohome: true,
           });
+
         } else {
           alert("invalid credentials");
         }
@@ -65,7 +69,7 @@ class Login extends Component {
   render() {
     return (
       <>
-        <HomePageNavbar head="Register" link="/Register"/>
+        <HomePageNavbar head="Register" link="/Register" />
         <div className="division">
           {this.state.tohome ? (
             <Navigate to="/booking" />
