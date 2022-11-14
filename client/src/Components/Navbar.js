@@ -59,7 +59,7 @@ export default function PrimarySearchAppBar() {
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
-            onClick={() => navigate("/Booking")}
+            // onClick={() => navigate("/Booking")}
           >
             Gas Booking
           </Typography>
