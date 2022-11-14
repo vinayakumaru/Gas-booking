@@ -20,16 +20,28 @@ app.post("/api/register", (req, res) => {
 });
 
 app.post("/api/login", (req, res) => {
-    gasBookingDatabase.checkUser(req.body, (status) => {
+    gasBookingDatabase.checkDealer(req.body, (status) => {
         if (status) {
             res.send({
                 username: req.body.username,
                 password: req.body.password,
+                isDealer: true,
             });
         } else {
-            res.send({ username: "", password: "" });
+            gasBookingDatabase.checkUser(req.body, (status) => {
+                if (status) {
+                    res.send({
+                        username: req.body.username,
+                        password: req.body.password,
+                        isDealer: false,
+                    });
+                } else {
+                    res.send({ username: "", password: "" });
+                }
+            });
         }
     });
+    
 });
 
 app.post("/api/book", (req, res) => {
@@ -124,6 +136,26 @@ app.post('/api/updatepassword',(req,res)=>{
 
 app.post('/api/updateCompany', (req, res) => {
     gasBookingDatabase.updateCompany(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
+app.post('/api/getDealerOrders', (req, res) => {
+    gasBookingDatabase.getDealerOrders(req.body, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post('/api/updateOrderStatus', (req, res) => {
+    gasBookingDatabase.updateOrderStatus(req.body, (status) => {
         if (status) {
             res.send("success");
         } else {

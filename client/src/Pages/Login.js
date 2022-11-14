@@ -13,6 +13,7 @@ class Login extends Component {
       username: "",
       password: "",
       tohome: false,
+      homePage: "",
     };
     this.changeusername = this.changeusername.bind(this);
     this.changepaswrd = this.changepaswrd.bind(this);
@@ -50,6 +51,7 @@ class Login extends Component {
           token.set('username', res.data.username, { path: "/", maxAge: 604800 })
           this.setState({
             tohome: true,
+            homePage: res.data.isDealer ? "/dealer" : "/booking",
           });
 
         } else {
@@ -72,7 +74,7 @@ class Login extends Component {
         <HomePageNavbar head="Register" link="/Register" />
         <div className="division">
           {this.state.tohome ? (
-            <Navigate to="/booking" />
+            <Navigate to={this.state.homePage} />
           ) : (
             <div>
               <div>

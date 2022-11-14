@@ -68,6 +68,21 @@ class GasBookingDatabase {
         );
     }
 
+    checkDealer({ username }, callback) {
+        this.pool.query(
+            `select License_No from dealer where license_no='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+                if (result.length > 0) callback(true);
+                else callback(false);
+            }
+        );
+    }
+
     updateProfile(user, callback) {
         this.pool.query(
             `UPDATE customer SET firstname='${user.firstname}',lastname='${user.lastname}',pincode=${user.pincode},address='${user.address}',company='${user.company}' WHERE username='${user.username}'`,
@@ -200,6 +215,36 @@ class GasBookingDatabase {
     updateCompany({username,company}, callback) {
         this.pool.query(
             `UPDATE customer SET company='${company}' WHERE username='${username}'`,
+            (err, _) => {
+                if (err) {
+                    console.log(err.sqlMessage);
+                    callback(false);
+                    return;
+                }
+                console.log("successfully updated");
+                callback(true);
+            }
+        )
+    }
+
+    getDealerOrders({username}, callback) {
+        this.pool.query(
+            `SELECT order_id,customer.username,gas_type,address from customer join (select order_id,username,gas_type from dealer join (select orders.order_id,username,company_name,gas_type from order_status join orders on order_status.order_id = orders.order_id WHERE order_status.order_status = "pending") as t on t.company_name = dealer.company_name where dealer.License_No='${username}') as c on customer.username = c.username`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                console.log(result);
+                callback(result);
+            }
+        );
+    }
+
+    updateOrderStatus({order_id}, callback) {
+        this.pool.query(
+            `UPDATE order_status SET order_status='shipped' WHERE order_id=${order_id}`,
             (err, _) => {
                 if (err) {
                     console.log(err.sqlMessage);

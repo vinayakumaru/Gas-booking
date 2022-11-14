@@ -16,6 +16,7 @@ CREATE PROCEDURE insert_to_orders(IN username varchar(40),IN gas_type varchar(40
         SET id = FLOOR(RAND()*100000000);
 		INSERT INTO orders(order_id,username,company_name,gas_type) VALUES(id,username,getUserCompany(username),gas_type);
         INSERT INTO payment(order_id,payment_method,amount) VALUES(id,payment_method,amount);
+        INSERT INTO order_status(order_id,order_status) VALUES(id,"pending");
 	END $$
  DELIMITER ;
 

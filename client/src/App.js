@@ -11,7 +11,7 @@ import BookForGas from "./Pages/BookForGas";
 import OrderHistory from "./Pages/OrderHistory";
 import ForgotPas from "./Pages/ForgotPas";
 import Admin from "./Pages/admin";
-import DealerLogin from "./Pages/DealerLogin";
+import Dealer from "./Pages/Dealer";
 function App() {
   return (
     <StrictMode>
@@ -29,7 +29,7 @@ function App() {
             <Route path="/orderhistory" element={<OrderHistory/>} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/forgotpassword" element={<ForgotPas />} />
-            <Route path="/dealerlogin" element={<DealerLogin />} />
+            <Route path="/dealer" element={<Dealer />} />
           </Routes>
         </Router>
       </div>

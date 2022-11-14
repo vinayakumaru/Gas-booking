@@ -29,6 +29,7 @@ function setupTable() {
     setupGasTypeTable();
     setupOrderTable();
     setupPaymentTable();
+    setupOrderStatus();
 };
 
 function setupAdminTable() {
@@ -90,4 +91,14 @@ function setupPaymentTable() {
             console.log("payment table created");
         }
     );
+}
+
+function setupOrderStatus() {
+    pool.query(
+        "CREATE TABLE IF NOT EXISTS order_status(order_id int,order_status varchar(10))",
+        (err, result) => {
+            if (err) throw err;
+            console.log("order status table created");
+        }
+    )
 }
