@@ -37,6 +37,10 @@ export default function HomePageNavbar(props) {
                     <Link to={props.link}>
                         <button className="btn btn-success" style={{width: "100px"}}>{props.head}</button>
                     </Link>
+                    <Link to="/dealerlogin">
+                        <button className="btn btn-success" style={{width: "100px", marginLeft: "10px"}}>DealerLogin</button>
+                    </Link>
+                    
                 </div>
             </div>
         </nav>

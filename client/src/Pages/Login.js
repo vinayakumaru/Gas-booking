@@ -116,7 +116,7 @@ class Login extends Component {
               <div>
                 <span className="span">
                   Forgot password{" "}
-                  <Link to="/">click here</Link>
+                  <Link to="/forgotpassword">click here</Link>
                 </span>
               </div>
             </div>

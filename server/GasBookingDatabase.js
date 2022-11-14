@@ -168,6 +168,19 @@ class GasBookingDatabase {
             }
         );
     }
+    updatePassword({username,password,email}, callback) {
+        console.log(username);
+        this.pool.query(`update customer set password='${password}' where username='${username}' and email='${email}'`),
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                callback(false);
+                return;
+            }
+           
+            callback(true);
+        }
+    }
 
     insertOrder(order, callback) {
         this.pool.query(

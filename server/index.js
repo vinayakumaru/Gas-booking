@@ -111,6 +111,16 @@ app.get("/api/getGasCompanies", (req, res) => {
         }
     });
 });
+app.post('/api/updatepassword',(req,res)=>{
+    console.log(req.body);
+    gasBookingDatabase.updatePassword(req.body,(status)=>{
+        if(status){
+            res.send("success");
+        }else{
+            res.send("failure");
+        }
+    });
+})
 
 app.post('/api/updateCompany', (req, res) => {
     gasBookingDatabase.updateCompany(req.body, (status) => {

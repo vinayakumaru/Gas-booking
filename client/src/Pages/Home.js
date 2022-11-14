@@ -14,7 +14,7 @@ export default function Home() {
                     alignItems: "center",
                 }}
             >
-                <HomePageCorousel />
+                {/* <HomePageCorousel /> */}
             </div>
         </div>
     );
