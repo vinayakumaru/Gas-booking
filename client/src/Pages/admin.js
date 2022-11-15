@@ -14,6 +14,9 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import EditDialog from '../Components/EditDialog';
+
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -40,30 +43,57 @@ export default function SimpleContainer() {
     const [Tables, setTables] = useState([]);
     const [buttonSelected, setbuttonSelected] = useState(0);
     const [dataTable, setdataTable] = useState([]);
+    const [open, setOpen] = React.useState(false);
+    const [dialogData, setdialogData] = useState({});
+    const [prevDialogData, setprevDialogData] = useState({});
+
+    const handleClickOpen = (row) => {
+        setprevDialogData(row);
+        setdialogData(row);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleUpdate = () => {
+        setOpen(false);
+        axios.post("http://localhost:4000/api/UpdateRow", { table: Tables[buttonSelected].Tables_in_gasbooking, prevRow: prevDialogData, row: dialogData })
+            .then((res) => {
+                handleTable(Tables[buttonSelected].Tables_in_gasbooking);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+    };
 
     useEffect(() => {
         axios.get("http://localhost:4000/api/getAllTables")
             .then((res) => {
-                console.log(res.data);
                 setTables(res.data);
-                axios.post("http://localhost:4000/api/getTable", { table: res.data[buttonSelected].Tables_in_gasbooking })
-                    .then((res) => {
-                        console.log(res.data);
-                        setdataTable(res.data);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
             })
             .catch((err) => {
                 console.log(err);
             });
     }, []);
 
+    useEffect(() => {
+        if (Tables.length > 0) {
+        axios.post("http://localhost:4000/api/getTable", { table: Tables[buttonSelected].Tables_in_gasbooking })
+                    .then((res) => {
+                        setdataTable(res.data);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+        }
+    }, [Tables,buttonSelected]);
+
     const handleTable = (table) => {
         axios.post("http://localhost:4000/api/getTable", { table })
             .then((res) => {
-                console.log(res.data);
                 setdataTable(res.data);
             })
             .catch((err) => {
@@ -77,7 +107,7 @@ export default function SimpleContainer() {
             <Box
                 sx={{
                     display: "flex",
-                    minWidth: "200px",
+                    minWidth: "20vw",
                     padding: "10px",
                     margin: "5px",
                     marginRight: "3px",
@@ -109,10 +139,10 @@ export default function SimpleContainer() {
                     </Typography>
                     {Tables.map(({ Tables_in_gasbooking }, index) =>
                     (<Button
+                        key={index}
                         variant={buttonSelected === index ? "contained" : "outlined"}
                         onClick={() => {
                             setbuttonSelected(index);
-                            handleTable(Tables_in_gasbooking);
                         }}
                     >{Tables_in_gasbooking}</Button>)
                     )}
@@ -134,8 +164,8 @@ export default function SimpleContainer() {
                                 <TableRow>
                                     {dataTable.length > 0 ? Object.keys(dataTable[0]).map((key) => (
                                         <StyledTableCell>{key}</StyledTableCell>
-                                    )) : null}  
-                                    <StyledTableCell align="right"  sx={{ paddingRight: "25px" }}>Action</StyledTableCell>
+                                    )) : null}
+                                    <StyledTableCell align="right" sx={{ paddingRight: "25px" }}>Action</StyledTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -147,15 +177,30 @@ export default function SimpleContainer() {
                                             </StyledTableCell>
                                         ))}
                                         <StyledTableCell align="right">
-                                            <div style={{ display: "flex", gap: "10px" , justifyContent: "right"}}>
-                                                <IconButton aria-label="delete" sx={{ marginTop: "6px" }}>
+                                            <div style={{ display: "flex", gap: "10px", justifyContent: "right" }}>
+                                                <IconButton aria-label="edit" sx={{ marginTop: "6px" }}
+                                                    onClick={() => {
+                                                        handleClickOpen(row);
+                                                    }}
+
+                                                >
                                                     <EditIcon sx={{ color: "#1021DF" }} />
                                                 </IconButton>
-                                                <IconButton aria-label="edit" sx={{ marginTop: "6px" }}>
+                                                <IconButton aria-label="delete" sx={{ marginTop: "6px" }}
+                                                    onClick={() => {
+                                                        axios.post("http://localhost:4000/api/deleteRow", { table: Tables[buttonSelected].Tables_in_gasbooking, row })
+                                                            .then((res) => {
+
+                                                                handleTable(Tables[buttonSelected].Tables_in_gasbooking);
+                                                            })
+                                                            .catch((err) => {
+                                                                console.log(err);
+                                                            });
+                                                    }}
+                                                >
                                                     <DeleteIcon sx={{ color: "#FF0000" }} />
                                                 </IconButton>
                                             </div>
-                                            
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 ))}
@@ -163,6 +208,7 @@ export default function SimpleContainer() {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    <EditDialog dialogData={dialogData} setdialogData={setdialogData} open={open} handleClose={handleClose} handleUpdate={handleUpdate} />
                 </div>
             </Box>
         </div>
