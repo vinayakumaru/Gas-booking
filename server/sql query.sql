@@ -29,3 +29,7 @@ BEGIN
   RETURN company_name;
 END $$
 DELIMITER ;
+
+
+CREATE VIEW IF NOT EXISTS get_dealer_orders AS
+SELECT order_id,customer.username,gas_type,address,License_No from customer join (select order_id,username,gas_type,License_No from dealer join (select orders.order_id,username,company_name,gas_type from order_status join orders on order_status.order_id = orders.order_id WHERE order_status.order_status ="pending") as t on t.company_name = dealer.company_name) as c on customer.username = c.username;

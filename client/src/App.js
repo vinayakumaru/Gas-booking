@@ -2,7 +2,7 @@ import "./App.css";
 import Home from "./Pages/Home";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
-import React, { StrictMode } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import RegisterGas from './Pages/RegisterGas';
 import Booking from "./Pages/Booking";
@@ -13,7 +13,6 @@ import Admin from "./Pages/Admin";
 import Dealer from "./Pages/Dealer";
 function App() {
   return (
-    <StrictMode>
       <div className="App">
         <Router>
           <Routes>
@@ -32,7 +31,6 @@ function App() {
           </Routes>
         </Router>
       </div>
-    </StrictMode>
   );
 }
 

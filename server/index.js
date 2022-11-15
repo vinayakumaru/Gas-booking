@@ -184,6 +184,26 @@ app.post('/api/getTable', (req, res) => {
     });
 });
 
+app.post('/api/deleteRow', (req, res) => {
+    gasBookingDatabase.deleteRow(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
+app.post('/api/updateRow', (req, res) => {
+    gasBookingDatabase.updateRow(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
     gasBookingDatabase.connect();

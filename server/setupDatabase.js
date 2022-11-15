@@ -34,7 +34,7 @@ function setupTable() {
 
 function setupAdminTable() {
     pool.query(
-        "CREATE TABLE IF NOT EXISTS admin (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(40), lastname VARCHAR(40), username VARCHAR(40) unique not null, password VARCHAR(40), email VARCHAR(40) unique not null, phone_number bigint)",
+        "CREATE TABLE admin(username varchar(20) PRIMARY KEY,password varchar(20))",
         (err, _) => {
             if (err) throw err;
             console.log("admin table created");

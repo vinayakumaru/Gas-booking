@@ -229,7 +229,7 @@ class GasBookingDatabase {
 
     getDealerOrders({username}, callback) {
         this.pool.query(
-            `SELECT order_id,customer.username,gas_type,address from customer join (select order_id,username,gas_type from dealer join (select orders.order_id,username,company_name,gas_type from order_status join orders on order_status.order_id = orders.order_id WHERE order_status.order_status = "pending") as t on t.company_name = dealer.company_name where dealer.License_No='${username}') as c on customer.username = c.username`,
+            `SELECT * FROM get_dealer_orders WHERE License_No='${username}'`,
             (err, result) => {
                 if (err) {
                     console.log(err);
@@ -281,6 +281,39 @@ class GasBookingDatabase {
                     return;
                 }
                 callback(result);
+            }
+        );
+    }
+
+    deleteRow({table, row}, callback) {
+        let condition = Object.keys(row).map(key => `${key}='${row[key]}'`).join(' AND ');
+        this.pool.query(
+            `delete from ${table} where ${condition}`,
+            (err, _) => {
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+                callback(true);
+            }
+        );
+    }
+
+    updateRow({table, prevRow, row}, callback) {
+        let condition = Object.keys(prevRow).filter(key => prevRow[key]? true: false).map(key => `${key}='${prevRow[key]}'`).join(' AND ');
+        let update = Object.keys(row).map(key => `${key}='${row[key]}'`).join(',');
+        console.log(update);
+        console.log(condition);
+        this.pool.query(
+            `update ${table} set ${update} where ${condition}`,
+            (err, _) => {
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+                callback(true);
             }
         );
     }
