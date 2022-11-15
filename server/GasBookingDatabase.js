@@ -256,6 +256,34 @@ class GasBookingDatabase {
             }
         )
     }
+
+    getAllTables(callback) {
+        this.pool.query(
+            `Show tables`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
+
+    getTable(table, callback) {
+        this.pool.query(
+            `select * from ${table}`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                callback(result);
+            }
+        );
+    }
 }
 
 module.exports = GasBookingDatabase;

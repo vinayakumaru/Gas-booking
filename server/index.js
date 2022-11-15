@@ -164,6 +164,26 @@ app.post('/api/updateOrderStatus', (req, res) => {
     });
 });
 
+app.get('/api/getAllTables', (req, res) => {
+    gasBookingDatabase.getAllTables((result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post('/api/getTable', (req, res) => {
+    gasBookingDatabase.getTable(req.body.table, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
     gasBookingDatabase.connect();
