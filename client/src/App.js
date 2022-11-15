@@ -6,11 +6,10 @@ import React, { StrictMode } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import RegisterGas from './Pages/RegisterGas';
 import Booking from "./Pages/Booking";
-import AdminLogin from "./Pages/AdminLogin";
 import BookForGas from "./Pages/BookForGas";
 import OrderHistory from "./Pages/OrderHistory";
 import ForgotPas from "./Pages/ForgotPas";
-import Admin from "./Pages/admin";
+import Admin from "./Pages/Admin";
 import Dealer from "./Pages/Dealer";
 function App() {
   return (
@@ -22,7 +21,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/Login" element={<Login />} />
-            <Route path="/AdminLogin" element={<AdminLogin />} />
+            <Route path="/admin" element={<Admin/>} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/RegisterGas" element={<RegisterGas />} />
             <Route path="/bookforgas" element={<BookForGas/>} />
