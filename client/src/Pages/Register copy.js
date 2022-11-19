@@ -7,11 +7,6 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      first_name: "",
-      last_name: "",
-      address: "",
-      pincode: "",
-  
       username: "",
       password: "",
       email: "",
@@ -22,11 +17,6 @@ class Register extends Component {
     this.changepassword = this.changepassword.bind(this);
     this.changeemail = this.changeemail.bind(this);
     this.changephonenumber = this.changephonenumber.bind(this);
-    this.changefirstname = this.changefirstname.bind(this);
-    this.changelastname = this.changelastname.bind(this);
-    this.changeadress = this.changeadress.bind(this);
-    this.changepincode = this.changepincode.bind(this);
-  
     this.onSubmit = this.onSubmit.bind(this);
   }
   changeusername(event) {
@@ -49,38 +39,16 @@ class Register extends Component {
       phone_number: event.target.value,
     });
   }
-  changefirstname(event) {
-    this.setState({
-      first_name: event.target.value,
-    });
-  }
-  changelastname(event) {
-    this.setState({
-      last_name: event.target.value,
-    });
-  }
-  changeadress(event) {
-    this.setState({
-      address: event.target.value,
-    });
-  }
-  changepincode(event) {
-    this.setState({
-      pincode: event.target.value,
-    });
-  }
-
-  
   onSubmit(event) {
     event.preventDefault();
     const registered = {
-      firstname: this.state.first_name,
-      lastname: this.state.last_name,
+      firstname: "",
+      lastname: "",
       username: this.state.username,
       password: this.state.password,
-      pincode: this.state.pincode,
+      pincode: null,
       email: this.state.email,
-      address: this.state.address,
+      address: "",
       phone_number: this.state.phone_number,
       company: "",
     };
@@ -89,8 +57,8 @@ class Register extends Component {
       .then((response) => console.log(response.data));
 
     this.setState({
-      first_name: "",
-      last_name: "",
+      firstname: "",
+      lastname: "",
       username: "",
       password: "",
       pincode: "",
@@ -109,21 +77,21 @@ class Register extends Component {
         ) : (
           <>
             <HomePageNavbar head="Login" link="/Login"/>
-            <section style={{ height: "40vh" }}>
+            <section style={{ height: "80vh" }}>
               <div
-                className="mask align-items-center gradient-custom"
+                className="mask d-flex align-items-center h-100 gradient-custom"
               >
-                <div className="container mt-3">
+                <div className="container">
                   <div className="row justify-content-center">
                     <div className="col-12 col-lg-9 col-xl-7">
                       <div className="card">
-                        <div className="card-body p-4 p-md-4">
-                          <h3 className="mb-2 pb-2">
+                        <div className="card-body p-4 p-md-5">
+                          <h3 className="mb-4 pb-2">
                             Registration Form
                           </h3>
                           <form onSubmit={this.onSubmit}>
                             <div className="row">
-                              <div className="col-md-6 mb-2">
+                              <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
                                     type="text"
@@ -141,7 +109,7 @@ class Register extends Component {
                                   </label>
                                 </div>
                               </div>
-                              <div className="col-md-6 mb-2">
+                              <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
                                     type="text"
@@ -161,7 +129,7 @@ class Register extends Component {
                               </div>
                             </div>
                             <div className="row">
-                              <div className="col-md-6 mb-2">
+                              <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
                                     type="email"
@@ -179,7 +147,7 @@ class Register extends Component {
                                   </label>
                                 </div>
                               </div>
-                              <div className="col-md-6 mb-2">
+                              <div className="col-md-6 mb-4">
                                 <div className="form-outline">
                                   <input
                                     type="tel"
@@ -198,90 +166,11 @@ class Register extends Component {
                                 </div>
                               </div>
                             </div>
-                            
-                            <div className="row">
-                              <div className="col-md-6 mb-2">
-                                <div className="form-outline">
-                                  <input
-                                    type="text"
-                                    id="firstname"
-                                    className="form-control"
-                                    value={this.state.first_name}
-                                    onChange={this.changefirstname}
-                                    required
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="lastname"
-                                  >
-                                    firstname
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="col-md-6 mb-2">
-                                <div className="form-outline">
-                                  <input
-                                    type="text"
-                                    id="lastname"
-                                    className="form-control"
-                                    value={this.state.last_name}
-                                    onChange={this.changelastname}
-                                    required
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="lastName"
-                                  >
-                                    lastname
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-
-
-                            <div className="row">
-                              <div className="col-md-6 mb-2">
-                                <div className="form-outline">
-                                  <input
-                                    type="address"
-                                    id="Address"
-                                    className="form-control"
-                                    value={this.state.address}
-                                    onChange={this.changeadress}
-                                    required
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="address"
-                                  >
-                                   Address
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="col-md-6 mb-2">
-                                <div className="form-outline">
-                                  <input
-                                    type="tel"
-                                    id="phoneNumber"
-                                    className="form-control"
-                                    value={this.state.pincode}
-                                    onChange={this.changepincode}
-                                    required
-                                  />
-                                  <label
-                                    className="form-label"
-                                    htmlFor="pincode"
-                                  >
-                                   Pin Code
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
                             <div className="row">
                               <div className="col-12">
-                                <div className="mt-3">
+                                <div className="mt-4">
                                   <input
-                                    className="btn btn-warning"
+                                    className="btn btn-warning btn-lg"
                                     type="submit"
                                     defaultValue="Submit"
                                   />

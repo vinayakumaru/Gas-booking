@@ -40,7 +40,7 @@ class Login extends Component {
     console.log(signin);
 
     axios
-      .post("http://localhost:4000/api/login/", signin)
+      .post(process.env.REACT_APP_SERVER_URL + "/api/login/", signin)
       .then((res) => {
         console.log(res);
         if (
@@ -77,11 +77,6 @@ class Login extends Component {
             <Navigate to={this.state.homePage} />
           ) : (
             <div>
-              <div>
-                <Link to="/home">
-                  ❮<span class="w3-hide-small"> Back</span>
-                </Link>
-              </div>
               <h1>User Login</h1>
               <form onSubmit={this.onsubmit} className="login">
                 <input

@@ -1,5 +1,4 @@
 import "./App.css";
-import Home from "./Pages/Home";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import React from "react";
@@ -16,8 +15,8 @@ function App() {
       <div className="App">
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/admin" element={<Admin/>} />

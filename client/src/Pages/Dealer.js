@@ -35,7 +35,7 @@ const Dealer = () => {
   const [orderHistory, setorderHistory] = useState([]);
   useEffect(() => {
     const username = getUserFromCache();
-    axios.post("http://localhost:4000/api/getDealerOrders", { username })
+    axios.post(process.env.REACT_APP_SERVER_URL + "/api/getDealerOrders", { username })
       .then((res) => {
         console.log(res.data);
         setorderHistory(res.data);
@@ -72,11 +72,11 @@ const Dealer = () => {
                   <StyledTableCell align="right">
                     <Button variant="contained" color="success"
                       onClick={() => {
-                        axios.post("http://localhost:4000/api/updateOrderStatus", { order_id: row.order_id })
+                        axios.post(process.env.REACT_APP_SERVER_URL + "/api/updateOrderStatus", { order_id: row.order_id })
                           .then((res) => {
                             console.log(res.data);
                             const username = getUserFromCache();
-                            axios.post("http://localhost:4000/api/getDealerOrders", { username })
+                            axios.post(process.env.REACT_APP_SERVER_URL + "/api/getDealerOrders", { username })
                               .then((res) => {
                                 console.log(res.data);
                                 setorderHistory(res.data);
