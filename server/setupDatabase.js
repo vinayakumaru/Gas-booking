@@ -30,6 +30,7 @@ function setupTable() {
     setupOrderTable();
     setupPaymentTable();
     setupOrderStatus();
+    setupBackup_orders();
 };
 
 function setupAdminTable() {
@@ -64,7 +65,7 @@ function setupDealerTable() {
 
 function setupGasTypeTable() {
     pool.query(
-        "CREATE TABLE IF NOT EXISTS gas_type (gas_id int AUTO_INCREMENT PRIMARY KEY,company_name varchar(40),gas_type varchar(40),price int)",
+        "CREATE TABLE IF NOT EXISTS gas_type (gas_id int AUTO_INCREMENT PRIMARY KEY,company_name varchar(40),gas_type varchar(40),price int,quantity int default 50)",
         (err, result) => {
             if (err) throw err;
             console.log("gas_type table created");
@@ -99,6 +100,16 @@ function setupOrderStatus() {
         (err, result) => {
             if (err) throw err;
             console.log("order status table created");
+        }
+    )
+}
+
+function setupBackup_orders() {
+    pool.query(
+        "CREATE TABLE IF NOT EXISTS backup_orders(order_id int,username varchar(40),company_name varchar(20),gas_type varchar(40),order_date varchar(20),order_status varchar(10))",
+        (err, result) => {
+            if (err) throw err;
+            console.log("backup_orders table created");
         }
     )
 }

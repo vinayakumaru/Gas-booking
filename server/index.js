@@ -8,6 +8,7 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 const gasBookingDatabase = new GasBookingDatabase();
+const sendMail = require("./sendmail");
 
 app.post("/api/register", (req, res) => {
     gasBookingDatabase.register(req.body, (status) => {
@@ -41,13 +42,23 @@ app.post("/api/login", (req, res) => {
             });
         }
     });
-    
+
 });
 
 app.post("/api/book", (req, res) => {
     gasBookingDatabase.insertOrder(req.body, (status) => {
         if (status) {
             res.send("success");
+            gasBookingDatabase.getEmail(req.body, (email) => {
+                if (email) {
+                    sendMail(email, req.body)
+                        .then((result) => console.log("Email sent...", result))
+                        .catch((error) => console.log(error.message));
+                }
+                else {
+                    console.log("Email not found");
+                }
+            });
         } else {
             res.send("failure");
         }
@@ -85,7 +96,7 @@ app.post("/api/updateProfile", (req, res) => {
 });
 
 app.post("/api/getGasTypesByCompany", (req, res) => {
-    gasBookingDatabase.getGasTypesByCompany(req.body,(result) => {
+    gasBookingDatabase.getGasTypesByCompany(req.body, (result) => {
         if (result.length > 0) {
             res.send(result);
         } else {
@@ -95,7 +106,7 @@ app.post("/api/getGasTypesByCompany", (req, res) => {
 });
 
 app.post("/api/getGasTypesByUser", (req, res) => {
-    gasBookingDatabase.getGasTypesByUser(req.body,(result) => {
+    gasBookingDatabase.getGasTypesByUser(req.body, (result) => {
         if (result.length > 0) {
             res.send(result);
         } else {
@@ -123,12 +134,12 @@ app.get("/api/getGasCompanies", (req, res) => {
         }
     });
 });
-app.post('/api/updatepassword',(req,res)=>{
+app.post('/api/updatepassword', (req, res) => {
     console.log(req.body);
-    gasBookingDatabase.updatePassword(req.body,(status)=>{
-        if(status){
+    gasBookingDatabase.updatePassword(req.body, (status) => {
+        if (status) {
             res.send("success");
-        }else{
+        } else {
             res.send("failure");
         }
     });

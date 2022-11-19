@@ -19,12 +19,12 @@ const RegisterGas = () => {
     const [selectedProvider, setselectedProvider] = React.useState("");
     const gas_type_ref = useRef();
     const handleClick = () => {
-        setOpen(true);
+        
         const username = getUserFromCache();
-
         if (selectedProvider !== "") {
+            setOpen(true);
             axios
-                .post("http://localhost:4000/api/updateCompany", {
+                .post(process.env.REACT_APP_SERVER_URL + "/api/updateCompany", {
                     company: selectedProvider,
                     username: username,
                 })
@@ -38,7 +38,7 @@ const RegisterGas = () => {
     };
     useEffect(() => {
         axios
-            .get("http://localhost:4000/api/getGasCompanies")
+            .get(process.env.REACT_APP_SERVER_URL + "/api/getGasCompanies")
             .then((res) => {
                 console.log(res.data);
                 setgasprovider(res.data);
@@ -48,7 +48,7 @@ const RegisterGas = () => {
             });
 
         axios
-            .get("http://localhost:4000/api/getGasTypes")
+            .get(process.env.REACT_APP_SERVER_URL + "/api/getGasTypes")
             .then((res) => {
                 console.log(res.data);
                 setgastypes(res.data);
@@ -118,6 +118,8 @@ const RegisterGas = () => {
                     )}
                 />
                 <Dialog
+                    display_text="Register"
+                    display_message="Are you Sure you want to register a new gas provider?"
                     success={() => {
                         handleClick();
                     }}
@@ -132,7 +134,7 @@ const RegisterGas = () => {
                         severity="success"
                         sx={{ width: "100%" }}
                     >
-                        Registered new gas provider! {getUserFromCache()}
+                        Registered new gas provider!
                     </Alert>
                 </Snackbar>
             </div>

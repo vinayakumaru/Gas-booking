@@ -68,6 +68,21 @@ class GasBookingDatabase {
         );
     }
 
+    getEmail({username}, callback) {
+        this.pool.query(
+            `select email from customer where username='${username}'`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+                if (result.length > 0) callback(result[0].email);
+                else callback(false);
+            }
+        );
+    }
+
     checkDealer({ username }, callback) {
         this.pool.query(
             `select License_No from dealer where license_no='${username}'`,
@@ -185,16 +200,15 @@ class GasBookingDatabase {
     }
     updatePassword({username,password,email}, callback) {
         console.log(username);
-        this.pool.query(`update customer set password='${password}' where username='${username}' and email='${email}'`),
-        (err, result) => {
+        this.pool.query(`update customer set password='${password}' where username='${username}' and email='${email}'`,
+        (err, _) => {
             if (err) {
                 console.log(err);
                 callback(false);
                 return;
             }
-           
             callback(true);
-        }
+        });
     }
 
     insertOrder(order, callback) {
@@ -286,7 +300,7 @@ class GasBookingDatabase {
     }
 
     deleteRow({table, row}, callback) {
-        let condition = Object.keys(row).map(key => `${key}='${row[key]}'`).join(' AND ');
+        let condition = Object.keys(row).filter(key => row[key]? true: false).map(key => `${key}='${row[key]}'`).join(' AND ');
         this.pool.query(
             `delete from ${table} where ${condition}`,
             (err, _) => {

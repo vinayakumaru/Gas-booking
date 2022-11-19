@@ -1,6 +1,6 @@
 import React from "react";
 import HomePageNavbar from "../Components/HomePageNavbar";
-import HomePageCorousel from "../Components/HomePageCorousel";
+// import HomePageCorousel from "../Components/HomePageCorousel";
 
 export default function Home() {
     return (

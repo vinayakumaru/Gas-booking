@@ -36,7 +36,7 @@ const OrderHistory = () => {
     const [orderHistory, setorderHistory] = useState([]);
     useEffect(() => {
         const username = getUserFromCache();
-        axios.post("http://localhost:4000/api/getOrders", { username })
+        axios.post(process.env.REACT_APP_SERVER_URL + "/api/getOrders", { username })
             .then((res) => {
                 console.log(res.data);
                 setorderHistory(res.data);

@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function AlertDialog({success}) {
+export default function AlertDialog(props) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -14,8 +14,7 @@ export default function AlertDialog({success}) {
     };
 
     const handleClose = () => {
-        setOpen(false);
-        
+        setOpen(false);    
     };
 
     return (
@@ -27,9 +26,10 @@ export default function AlertDialog({success}) {
                     width: "100px",
                     height: "50px",
                 }}
+                {...props}
                 onClick={handleClickOpen}
             >
-                Register
+                {props.display_text}
             </Button>
             <Dialog
                 open={open}
@@ -40,14 +40,14 @@ export default function AlertDialog({success}) {
                 <DialogTitle id="alert-dialog-title">{"Alert"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you Sure you want to register a new gas provider?
+                        {props.display_message}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={(handleClose)}>cancle</Button>
                     <Button onClick={() => {
                         handleClose();
-                        success();
+                        props.success();
                     }} autoFocus>
                         Proceed
                     </Button>

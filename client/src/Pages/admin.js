@@ -39,7 +39,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function SimpleContainer() {
+export default function Admin() {
     const [Tables, setTables] = useState([]);
     const [buttonSelected, setbuttonSelected] = useState(0);
     const [dataTable, setdataTable] = useState([]);
@@ -59,7 +59,7 @@ export default function SimpleContainer() {
 
     const handleUpdate = () => {
         setOpen(false);
-        axios.post("http://localhost:4000/api/UpdateRow", { table: Tables[buttonSelected].Tables_in_gasbooking, prevRow: prevDialogData, row: dialogData })
+        axios.post(process.env.REACT_APP_SERVER_URL + "/api/UpdateRow", { table: Tables[buttonSelected].Tables_in_gasbooking, prevRow: prevDialogData, row: dialogData })
             .then((res) => {
                 handleTable(Tables[buttonSelected].Tables_in_gasbooking);
             })
@@ -70,7 +70,7 @@ export default function SimpleContainer() {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:4000/api/getAllTables")
+        axios.get(process.env.REACT_APP_SERVER_URL + "/api/getAllTables")
             .then((res) => {
                 setTables(res.data);
             })
@@ -81,18 +81,18 @@ export default function SimpleContainer() {
 
     useEffect(() => {
         if (Tables.length > 0) {
-        axios.post("http://localhost:4000/api/getTable", { table: Tables[buttonSelected].Tables_in_gasbooking })
-                    .then((res) => {
-                        setdataTable(res.data);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+            axios.post(process.env.REACT_APP_SERVER_URL + "/api/getTable", { table: Tables[buttonSelected].Tables_in_gasbooking })
+                .then((res) => {
+                    setdataTable(res.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
-    }, [Tables,buttonSelected]);
+    }, [Tables, buttonSelected]);
 
     const handleTable = (table) => {
-        axios.post("http://localhost:4000/api/getTable", { table })
+        axios.post(process.env.REACT_APP_SERVER_URL + "/api/getTable", { table })
             .then((res) => {
                 setdataTable(res.data);
             })
@@ -151,13 +151,24 @@ export default function SimpleContainer() {
             <Box sx={{
                 flexGrow: 1,
                 padding: "10px",
+                maxWidth: "78vw",
                 margin: "5px",
                 marginLeft: "0px",
                 borderRadius: "10px",
                 bgcolor: "background.paper",
                 boxShadow: "8px 8px 8px 8px rgba(0, 0, 0, 0.2), 0 6px 6px 0 rgba(0, 0, 0, 0.19)"
             }}>
-                <div className='container' style={{ display: "flex", justifyContent: "center", marginTop: "45px" }}>
+                <Button
+                    variant="contained"
+                    sx={{ position: "absolute", right: "150px", top: "20px" , minWidth:"80px"}}>
+                    Query
+                </Button>
+                <Button
+                    variant="contained"
+                    sx={{ position: "absolute", right: "50px", top: "20px" ,  minWidth:"80px"}}>
+                    Add
+                </Button>
+                <div className='container' style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
                     <TableContainer sx={{ maxWidth: 950, maxHeight: "85vh" }} component={Paper}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -173,7 +184,7 @@ export default function SimpleContainer() {
                                     <StyledTableRow key={index}>
                                         {Object.keys(row).map((key) => (
                                             <StyledTableCell>
-                                                {row[key]}
+                                                {row[key] && row[key].length > 20 ? row[key].substring(0, 20) + "..." : row[key]}
                                             </StyledTableCell>
                                         ))}
                                         <StyledTableCell align="right">
@@ -188,7 +199,7 @@ export default function SimpleContainer() {
                                                 </IconButton>
                                                 <IconButton aria-label="delete" sx={{ marginTop: "6px" }}
                                                     onClick={() => {
-                                                        axios.post("http://localhost:4000/api/deleteRow", { table: Tables[buttonSelected].Tables_in_gasbooking, row })
+                                                        axios.post(process.env.REACT_APP_SERVER_URL + "/api/deleteRow", { table: Tables[buttonSelected].Tables_in_gasbooking, row })
                                                             .then((res) => {
 
                                                                 handleTable(Tables[buttonSelected].Tables_in_gasbooking);
