@@ -13,11 +13,12 @@ DROP PROCEDURE IF EXISTS insert_to_orders $$
 CREATE PROCEDURE insert_to_orders(IN username varchar(40),IN gas_type varchar(40),IN payment_method varchar(20),IN amount INT)
 	BEGIN
     	DECLARE id int;
+        SET foreign_key_checks = 0;
         SET id = FLOOR(RAND()*100000000);
         INSERT INTO order_status(order_id,order_status) VALUES(id,"pending");
 		INSERT INTO orders(order_id,username,company_name,gas_type) VALUES(id,username,getUserCompany(username),gas_type);
         INSERT INTO payment(order_id,payment_method,amount) VALUES(id,payment_method,amount);
-        
+        SET foreign_key_checks = 1;
 	END $$
  DELIMITER ;
 
@@ -82,7 +83,7 @@ CREATE PROCEDURE update_backup_orders(IN order_id int,IN order_status varchar(10
  DELIMITER ;
 
 
- DELIMITER $$
+DELIMITER $$
 DROP TRIGGER IF EXISTS update_backup_orders_status $$
 CREATE TRIGGER update_backup_orders_status
 AFTER UPDATE ON order_status FOR EACH ROW
@@ -92,27 +93,64 @@ END $$
 DELIMITER ;
 
 -- create a cursor to get orders of particular date(varchar(20)) from orders table
+-- DELIMITER $$
+-- DROP PROCEDURE IF EXISTS get_orders_by_date $$
+-- CREATE PROCEDURE get_orders_by_date(IN date varchar(20))
+--   BEGIN 
+--     	DECLARE done INT DEFAULT FALSE;
+--         DECLARE order_id int;
+--         DECLARE username varchar(40);
+--         DECLARE company_name varchar(20);
+--         DECLARE gas_type varchar(40);
+--         DECLARE order_date varchar(20);
+--         DECLARE cur CURSOR FOR SELECT * FROM orders WHERE substring(order_date,1,10) = substring(date,1,10);
+--         DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+--         OPEN cur;
+--         read_loop: LOOP
+--         	FETCH cur INTO order_id,username,company_name,gas_type,order_date;
+--             IF done THEN
+--             	LEAVE read_loop;
+--             END IF;
+--             SELECT order_status INTO order_status FROM order_status WHERE order_id = order_id;
+--             INSERT INTO backup_orders VALUES(order_id,username,company_name,gas_type,order_date,order_status);
+--         END LOOP;
+--         CLOSE cur;
+--   END $$
+--  DELIMITER ;
+
+-- cursor to get total spendings of a customer
 DELIMITER $$
-DROP PROCEDURE IF EXISTS get_orders_by_date $$
-CREATE PROCEDURE get_orders_by_date(IN date varchar(20))
+DROP FUNCTION IF EXISTS get_total_spendings $$
+CREATE FUNCTION get_total_spendings(username varchar(40))
+RETURNS int
   BEGIN 
     	DECLARE done INT DEFAULT FALSE;
-        DECLARE order_id int;
-        DECLARE username varchar(40);
-        DECLARE company_name varchar(20);
-        DECLARE gas_type varchar(40);
-        DECLARE order_date varchar(20);
-        DECLARE cur CURSOR FOR SELECT * FROM orders WHERE substring(order_date,1,10) = substring(date,1,10);
+        DECLARE variable_amount int;
+        Declare total int DEFAULT 0;
+        DECLARE cur CURSOR FOR SELECT amount FROM payment WHERE payment.order_id IN (SELECT order_id FROM orders WHERE orders.username = username);
         DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
         OPEN cur;
         read_loop: LOOP
-        	FETCH cur INTO order_id,username,company_name,gas_type,order_date;
+        	FETCH cur INTO variable_amount;
             IF done THEN
             	LEAVE read_loop;
             END IF;
-            SELECT order_status INTO order_status FROM order_status WHERE order_id = order_id;
-            INSERT INTO backup_orders VALUES(order_id,username,company_name,gas_type,order_date,order_status);
+            SET total = total + variable_amount;
         END LOOP;
         CLOSE cur;
+        RETURN total;
   END $$
  DELIMITER ;
+
+ALTER TABLE orders ADD FOREIGN key(company_name) REFERENCES dealer(company_name) on DELETE CASCADE on update cascade ;
+
+ALTER TABLE orders ADD FOREIGN key(username) REFERENCES customer(username) on DELETE CASCADE on update cascade ;
+
+ALTER TABLE order_status ADD FOREIGN key(order_id) REFERENCES orders(order_id) on DELETE CASCADE on update cascade ;
+
+
+ALTER TABLE order_status ADD FOREIGN key(order_id) REFERENCES orders(order_id) on DELETE CASCADE on update cascade ;
+
+ALTER TABLE payment ADD FOREIGN key(order_id) REFERENCES orders(order_id) on DELETE CASCADE on update cascade ;
+
+ALTER TABLE customer ADD FOREIGN KEY(company) REFERENCES dealer(company_name) on DELETE SET NULL on update CASCADE; 

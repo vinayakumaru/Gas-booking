@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Dialog from '../Components/Dialog';
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Slide from "@mui/material/Slide";
 
 const BookForGas = () => {
     const Alert = React.forwardRef(function Alert(props, ref) {
@@ -68,9 +69,6 @@ const BookForGas = () => {
                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                             Your Subscribed Provider : <b>{gasprovider}</b>
                         </Typography>
-                        <Typography variant="h5" component="div">
-
-                        </Typography>
                         <Autocomplete
                             disablePortal
                             id="combo-box-demo"
@@ -120,6 +118,9 @@ const BookForGas = () => {
                             open={open}
                             autoHideDuration={4000}
                             onClose={handleClose}
+                            TransitionComponent={(props) => (
+                                <Slide {...props} direction="right" />
+                            )}
                         >
                             <Alert
                                 onClose={handleClose}

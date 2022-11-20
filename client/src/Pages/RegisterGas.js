@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import getUserFromCache from "../Utils/getUserFromCache";
 import axios from "axios";
+import Slide from "@mui/material/Slide";
 
 const RegisterGas = () => {
     const Alert = React.forwardRef(function Alert(props, ref) {
@@ -128,6 +129,9 @@ const RegisterGas = () => {
                     open={open}
                     autoHideDuration={4000}
                     onClose={handleClose}
+                    TransitionComponent={(props) => (
+                        <Slide {...props} direction="right" />
+                    )}
                 >
                     <Alert
                         onClose={handleClose}
