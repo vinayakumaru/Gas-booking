@@ -15,8 +15,8 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EditDialog from '../Components/EditDialog';
-
-
+import AddDialog from '../Components/AddDialog';
+import QueryDialog from '../Components/QueryDialog';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -44,8 +44,16 @@ export default function Admin() {
     const [buttonSelected, setbuttonSelected] = useState(0);
     const [dataTable, setdataTable] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [openAdd, setOpenAdd] = React.useState(false);
     const [dialogData, setdialogData] = useState({});
     const [prevDialogData, setprevDialogData] = useState({});
+    const [openQuery, setOpenQuery] = React.useState(false);
+
+
+    const URLpath = new URLSearchParams(window.location.search);
+    const id = URLpath.get('id');
+    const name = URLpath.get('password');
+    
 
     const handleClickOpen = (row) => {
         setprevDialogData(row);
@@ -53,8 +61,19 @@ export default function Admin() {
         setOpen(true);
     };
 
+    const handleClickOpenAdd = () => {
+        const temp = {};
+        for (let key in dataTable[0]) {
+            temp[key] = "";
+        }
+        setdialogData(temp);
+        setOpenAdd(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
+        setOpenAdd(false);
+        setOpenQuery(false);
     };
 
     const handleUpdate = () => {
@@ -67,6 +86,18 @@ export default function Admin() {
                 console.log(err);
             });
 
+    };
+
+    const handleAdd = (e) => {
+        e.preventDefault();
+        setOpenAdd(false);
+        axios.post(process.env.REACT_APP_SERVER_URL + "/api/insertRow", { table: Tables[buttonSelected].Tables_in_gasbooking, row: dialogData })
+            .then((res) => {
+                handleTable(Tables[buttonSelected].Tables_in_gasbooking);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     useEffect(() => {
@@ -160,12 +191,18 @@ export default function Admin() {
             }}>
                 <Button
                     variant="contained"
-                    sx={{ position: "absolute", right: "150px", top: "20px" , minWidth:"80px"}}>
+                    sx={{ position: "absolute", right: "150px", top: "20px" , minWidth:"80px"}}
+                    onClick={() => {
+                        setOpenQuery(true);
+                    }}
+                    >
                     Query
                 </Button>
                 <Button
                     variant="contained"
-                    sx={{ position: "absolute", right: "50px", top: "20px" ,  minWidth:"80px"}}>
+                    sx={{ position: "absolute", right: "50px", top: "20px" ,  minWidth:"80px"}}
+                    onClick={handleClickOpenAdd}
+                    >
                     Add
                 </Button>
                 <div className='container' style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
@@ -174,7 +211,7 @@ export default function Admin() {
                             <TableHead>
                                 <TableRow>
                                     {dataTable.length > 0 ? Object.keys(dataTable[0]).map((key) => (
-                                        <StyledTableCell>{key}</StyledTableCell>
+                                        <StyledTableCell key={key}>{key}</StyledTableCell>
                                     )) : null}
                                     <StyledTableCell align="right" sx={{ paddingRight: "25px" }}>Action</StyledTableCell>
                                 </TableRow>
@@ -183,11 +220,11 @@ export default function Admin() {
                                 {dataTable.map((row, index) => (
                                     <StyledTableRow key={index}>
                                         {Object.keys(row).map((key) => (
-                                            <StyledTableCell>
+                                            <StyledTableCell key={key}>
                                                 {row[key] && row[key].length > 20 ? row[key].substring(0, 20) + "..." : row[key]}
                                             </StyledTableCell>
                                         ))}
-                                        <StyledTableCell align="right">
+                                        <StyledTableCell align="right" key={'action'}>
                                             <div style={{ display: "flex", gap: "10px", justifyContent: "right" }}>
                                                 <IconButton aria-label="edit" sx={{ marginTop: "6px" }}
                                                     onClick={() => {
@@ -220,6 +257,8 @@ export default function Admin() {
                         </Table>
                     </TableContainer>
                     <EditDialog dialogData={dialogData} setdialogData={setdialogData} open={open} handleClose={handleClose} handleUpdate={handleUpdate} />
+                    <AddDialog dialogData={dialogData} setdialogData={setdialogData} open={openAdd} handleClose={handleClose} handleAdd={handleAdd} />
+                    <QueryDialog open={openQuery} handleClose={handleClose} />
                 </div>
             </Box>
         </div>

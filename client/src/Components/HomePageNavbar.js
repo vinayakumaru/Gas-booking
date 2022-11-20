@@ -1,5 +1,5 @@
 import React from "react";
-import cylinder from "../Pages/images/gas.png";
+import cylinder from "../static/images/gas.png";
 import { Link } from "react-router-dom";
 
 export default function HomePageNavbar(props) {

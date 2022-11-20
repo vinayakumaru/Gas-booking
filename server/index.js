@@ -52,7 +52,7 @@ app.post("/api/book", (req, res) => {
             gasBookingDatabase.getEmail(req.body, (email) => {
                 if (email) {
                     sendMail(email, req.body)
-                        .then((result) => console.log("Email sent...", result))
+                        .then((_) => console.log("Email sent..."))
                         .catch((error) => console.log(error.message));
                 }
                 else {
@@ -78,7 +78,7 @@ app.post("/api/getOrders", (req, res) => {
 app.post("/api/getProfile", (req, res) => {
     gasBookingDatabase.getProfile(req.body.username, (result) => {
         if (result.length > 0) {
-            res.send(result);
+            res.send(result[0]);
         } else {
             res.send([]);
         }
@@ -99,6 +99,26 @@ app.post("/api/getGasTypesByCompany", (req, res) => {
     gasBookingDatabase.getGasTypesByCompany(req.body, (result) => {
         if (result.length > 0) {
             res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post("/api/getTotalSpendings", (req, res) => {
+    gasBookingDatabase.getTotalSpendings(req.body, (result) => {
+        if (result.length > 0) {
+            res.send(result[0]);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
+app.post("/api/getTotalOrders", (req, res) => {
+    gasBookingDatabase.getTotalOrders(req.body, (result) => {
+        if (result.length > 0) {
+            res.send(result[0]);
         } else {
             res.send([]);
         }
@@ -135,7 +155,6 @@ app.get("/api/getGasCompanies", (req, res) => {
     });
 });
 app.post('/api/updatepassword', (req, res) => {
-    console.log(req.body);
     gasBookingDatabase.updatePassword(req.body, (status) => {
         if (status) {
             res.send("success");
@@ -151,6 +170,16 @@ app.post('/api/updateCompany', (req, res) => {
             res.send("success");
         } else {
             res.send("failure");
+        }
+    });
+});
+
+app.post('/api/getUserSpendingByCompany', (req, res) => {
+    gasBookingDatabase.getUserSpendingByCompany(req.body, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
         }
     });
 });
@@ -211,6 +240,26 @@ app.post('/api/updateRow', (req, res) => {
             res.send("success");
         } else {
             res.send("failure");
+        }
+    });
+});
+
+app.post('/api/insertRow', (req, res) => {
+    gasBookingDatabase.insertRow(req.body, (status) => {
+        if (status) {
+            res.send("success");
+        } else {
+            res.send("failure");
+        }
+    });
+});
+
+app.post('/api/runQuery', (req, res) => {
+    gasBookingDatabase.runQuery(req.body.query, (err,result) => {
+        if (err) {
+            res.status(400).json({error: err.message});
+        } else {
+            res.send(result);
         }
     });
 });
