@@ -31,7 +31,7 @@ function App() {
             <Route path="/forgotpassword" element={<ForgotPas />} />
             <Route path="/dealer" element={<Dealer />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<PageNotFound />} />
+            <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </Router>
       </div>

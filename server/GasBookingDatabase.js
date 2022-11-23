@@ -1,28 +1,35 @@
 const mysql = require("mysql");
+const fs = require("fs");
 
 class GasBookingDatabase {
     constructor() {
         this.pool = null;
     }
-    
-    connect(){
+
+    connect() {
+        // this.pool = mysql.createPool({
+        //     connectionLimit: 10,
+        //     host: "localhost",
+        //     user: "root",
+        //     database: "gasbooking",
+        // });
+
         this.pool = mysql.createPool({
-            connectionLimit: 10,
-            host: "localhost",
-            user: "root",
+            host: process.env.DATABASE_HOST,
+            user: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASSWORD,
             database: "gasbooking",
+            port: 3306,
+            ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") },
         });
 
-        this.pool.query(
-            'select * from Admin',
-            (err, _) => {
-                if (err) {
-                    console.log("unable to connect database");
-                    return;
-                }
-                console.log("connected to database");
+        this.pool.query("select * from Admin", (err, _) => {
+            if (err) {
+                console.log("unable to connect database");
+                return;
             }
-        );
+            console.log("connected to database");
+        });
     }
 
     register(
@@ -40,7 +47,7 @@ class GasBookingDatabase {
         callback
     ) {
         this.pool.query(
-            `INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number,company) VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number},'${company}')`,
+            `INSERT INTO customer (firstname,lastname,username,password,pincode,email,address,phone_number) VALUES ('${firstname}','${lastname}','${username}','${password}',${pincode},'${email}','${address}',${phone_number})`,
             (err, result) => {
                 if (err) {
                     console.log(err.sqlMessage);
@@ -68,7 +75,7 @@ class GasBookingDatabase {
         );
     }
 
-    getEmail({username}, callback) {
+    getEmail({ username }, callback) {
         this.pool.query(
             `select email from customer where username='${username}'`,
             (err, result) => {
@@ -98,7 +105,7 @@ class GasBookingDatabase {
         );
     }
 
-    updateProfile({address,pincode,username}, callback) {
+    updateProfile({ address, pincode, username }, callback) {
         this.pool.query(
             `UPDATE customer SET address='${address}',pincode='${pincode}' WHERE username='${username}'`,
             (err, _) => {
@@ -141,7 +148,7 @@ class GasBookingDatabase {
         );
     }
 
-    getTotalSpendings({username}, callback) {
+    getTotalSpendings({ username }, callback) {
         this.pool.query(
             `select get_total_spendings('${username}') as total_spendings`,
             (err, result) => {
@@ -155,7 +162,7 @@ class GasBookingDatabase {
         );
     }
 
-    getTotalOrders({username}, callback) {
+    getTotalOrders({ username }, callback) {
         this.pool.query(
             `select count(*) as total_orders from orders where username='${username}'`,
             (err, result) => {
@@ -169,8 +176,7 @@ class GasBookingDatabase {
         );
     }
 
-
-    getGasTypesByUser({username},callback) {
+    getGasTypesByUser({ username }, callback) {
         this.pool.query(
             `select g.gas_type,g.price,g.company_name from gas_type as g inner join customer as c on g.company_name=c.company where c.username='${username}'`,
             (err, result) => {
@@ -198,20 +204,17 @@ class GasBookingDatabase {
         );
     }
     getGasCompanies(callback) {
-        this.pool.query(
-            `select company_name from dealer`,
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    callback([]);
-                    return;
-                }
-                callback(result);
+        this.pool.query(`select company_name from dealer`, (err, result) => {
+            if (err) {
+                console.log(err);
+                callback([]);
+                return;
             }
-        );
+            callback(result);
+        });
     }
 
-    getGasTypesByCompany(company,callback) {
+    getGasTypesByCompany(company, callback) {
         this.pool.query(
             `select gas_type,price from gas_type where company_name='${company}'`,
             (err, result) => {
@@ -224,17 +227,19 @@ class GasBookingDatabase {
             }
         );
     }
-    updatePassword({username,password,email}, callback) {
+    updatePassword({ username, password, email }, callback) {
         console.log(username);
-        this.pool.query(`update customer set password='${password}' where username='${username}' and email='${email}'`,
-        (err, _) => {
-            if (err) {
-                console.log(err);
-                callback(false);
-                return;
+        this.pool.query(
+            `update customer set password='${password}' where username='${username}' and email='${email}'`,
+            (err, _) => {
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+                callback(true);
             }
-            callback(true);
-        });
+        );
     }
 
     insertOrder(order, callback) {
@@ -252,7 +257,7 @@ class GasBookingDatabase {
         );
     }
 
-    updateCompany({username,company}, callback) {
+    updateCompany({ username, company }, callback) {
         this.pool.query(
             `UPDATE customer SET company='${company}' WHERE username='${username}'`,
             (err, _) => {
@@ -264,10 +269,10 @@ class GasBookingDatabase {
                 console.log("successfully updated");
                 callback(true);
             }
-        )
+        );
     }
 
-    getDealerOrders({username}, callback) {
+    getDealerOrders({ username }, callback) {
         this.pool.query(
             `SELECT * FROM get_dealer_orders WHERE License_No='${username}'`,
             (err, result) => {
@@ -282,7 +287,7 @@ class GasBookingDatabase {
         );
     }
 
-    getUserSpendingByCompany({username}, callback) {
+    getUserSpendingByCompany({ username }, callback) {
         this.pool.query(
             `select company_name,SUM(amount) as total_spending from (select order_id,company_name from orders where username='${username}') as c join payment where c.order_id=payment.order_id GROUP by company_name`,
             (err, result) => {
@@ -296,9 +301,7 @@ class GasBookingDatabase {
         );
     }
 
-
-
-    updateOrderStatus({order_id}, callback) {
+    updateOrderStatus({ order_id }, callback) {
         this.pool.query(
             `UPDATE order_status SET order_status='shipped' WHERE order_id=${order_id}`,
             (err, _) => {
@@ -310,55 +313,54 @@ class GasBookingDatabase {
                 console.log("successfully updated");
                 callback(true);
             }
-        )
+        );
     }
 
     getAllTables(callback) {
-        this.pool.query(
-            `Show tables`,
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    callback([]);
-                    return;
-                }
-                callback(result);
+        this.pool.query(`Show tables`, (err, result) => {
+            if (err) {
+                console.log(err);
+                callback([]);
+                return;
             }
-        );
+            callback(result);
+        });
     }
 
     getTable(table, callback) {
-        this.pool.query(
-            `select * from ${table}`,
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    callback([]);
-                    return;
-                }
-                callback(result);
+        this.pool.query(`select * from ${table}`, (err, result) => {
+            if (err) {
+                console.log(err);
+                callback([]);
+                return;
             }
-        );
+            callback(result);
+        });
     }
 
-    deleteRow({table, row}, callback) {
-        let condition = Object.keys(row).filter(key => row[key]? true: false).map(key => `${key}='${row[key]}'`).join(' AND ');
-        this.pool.query(
-            `delete from ${table} where ${condition}`,
-            (err, _) => {
-                if (err) {
-                    console.log(err);
-                    callback(false);
-                    return;
-                }
-                callback(true);
+    deleteRow({ table, row }, callback) {
+        let condition = Object.keys(row)
+            .filter((key) => (row[key] ? true : false))
+            .map((key) => `${key}='${row[key]}'`)
+            .join(" AND ");
+        this.pool.query(`delete from ${table} where ${condition}`, (err, _) => {
+            if (err) {
+                console.log(err);
+                callback(false);
+                return;
             }
-        );
+            callback(true);
+        });
     }
 
-    updateRow({table, prevRow, row}, callback) {
-        let condition = Object.keys(prevRow).filter(key => prevRow[key]? true: false).map(key => `${key}='${prevRow[key]}'`).join(' AND ');
-        let update = Object.keys(row).map(key => `${key}='${row[key]}'`).join(',');
+    updateRow({ table, prevRow, row }, callback) {
+        let condition = Object.keys(prevRow)
+            .filter((key) => (prevRow[key] ? true : false))
+            .map((key) => `${key}='${prevRow[key]}'`)
+            .join(" AND ");
+        let update = Object.keys(row)
+            .map((key) => `${key}='${row[key]}'`)
+            .join(",");
         console.log(update);
         console.log(condition);
         this.pool.query(
@@ -374,9 +376,11 @@ class GasBookingDatabase {
         );
     }
 
-    insertRow({table, row}, callback) {
-        let keys = Object.keys(row).join(',');
-        let values = Object.values(row).map(value => `'${value}'`).join(',');
+    insertRow({ table, row }, callback) {
+        let keys = Object.keys(row).join(",");
+        let values = Object.values(row)
+            .map((value) => `'${value}'`)
+            .join(",");
         this.pool.query(
             `insert into ${table} (${keys}) values (${values})`,
             (err, _) => {
@@ -391,12 +395,9 @@ class GasBookingDatabase {
     }
 
     runQuery(query, callback) {
-        this.pool.query(
-            query,
-            (err, result) => {
-                callback(err, result);
-            }
-        );
+        this.pool.query(query, (err, result) => {
+            callback(err, result);
+        });
     }
 }
 

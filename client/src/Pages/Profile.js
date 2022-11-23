@@ -64,10 +64,6 @@ const Profile = () => {
                 console.log(err);
             });
 
-        getProfile();
-    }, [user]);
-
-    const getProfile = () => {
         axios
             .post(process.env.REACT_APP_SERVER_URL + "/api/getProfile", {
                 username: user,
@@ -78,7 +74,7 @@ const Profile = () => {
             .catch((err) => {
                 console.log(err);
             });
-    };
+    }, [user]);
 
     const handleClose = () => {
         setOpen(false);
