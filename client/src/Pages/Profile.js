@@ -19,6 +19,7 @@ const Profile = () => {
     const [companySpendings, setcompanySpendings] = useState([]);
     const [SpendingsTotal, setSpendingsTotal] = useState(0);
     const [TotalOrders, setTotalOrders] = useState(0);
+    const [PendingOrders, setPendingOrders] = useState([]);
     const [userDetails, setuserDetails] = useState({
         username: "",
         firstname: "",
@@ -32,7 +33,7 @@ const Profile = () => {
         axios
             .post(
                 process.env.REACT_APP_SERVER_URL +
-                    "/api/getUserSpendingByCompany",
+                "/api/getUserSpendingByCompany",
                 { username: user }
             )
             .then((res) => {
@@ -70,6 +71,18 @@ const Profile = () => {
             })
             .then((res) => {
                 setuserDetails(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .post(process.env.REACT_APP_SERVER_URL + "/api/getPendingOrders", {
+                username: user,
+            })
+            .then((res) => {
+                console.log(res.data);
+                setPendingOrders(res.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -337,13 +350,40 @@ const Profile = () => {
                                 borderRadius: "10px",
                             }}
                         >
-                            <h1>My Posts</h1>
+                            <h3 style={{ color: "white" }}>Pending Orders</h3>
+                            <hr style={{ width: "90%", marginTop: "3px" }} />
+                            <br />
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    flexWrap: "wrap",
+                                    marginLeft: "15px",
+                                    width: "100%",
+                                    maxHeight: "70%",
+                                }}
+                            >
+                                <h5 style={{ display: "flex" }}> ORDER ID</h5>
+
+                                {PendingOrders.map((ordersh) => {
+                                    return (
+                                        <p
+                                            style={{
+                                                color: "white",
+                                                fontSize: "18px",
+                                            }}
+                                        >
+                                            {ordersh.order_id}
+                                        </p>
+                                    );
+                                })}
+                            </div>
                         </Paper>
                     </Box>
                 </div>
             </Box>
             <Snackbar
-                anchorOrigin={{ vertical:'bottom', horizontal:'right' }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 open={open}
                 autoHideDuration={4000}
                 onClose={handleClose}

@@ -204,6 +204,16 @@ app.post('/api/updateOrderStatus', (req, res) => {
     });
 });
 
+app.post('/api/getPendingOrders', (req, res) => {
+    gasBookingDatabase.getPendingOrders(req.body, (result) => {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send([]);
+        }
+    });
+});
+
 app.get('/api/getAllTables', (req, res) => {
     gasBookingDatabase.getAllTables((result) => {
         if (result.length > 0) {

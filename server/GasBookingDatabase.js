@@ -7,21 +7,21 @@ class GasBookingDatabase {
     }
 
     connect() {
-        // this.pool = mysql.createPool({
-        //     connectionLimit: 10,
-        //     host: "localhost",
-        //     user: "root",
-        //     database: "gasbooking",
-        // });
-
         this.pool = mysql.createPool({
-            host: process.env.DATABASE_HOST,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD,
+            connectionLimit: 10,
+            host: "localhost",
+            user: "root",
             database: "gasbooking",
-            port: 3306,
-            ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") },
         });
+
+        // this.pool = mysql.createPool({
+        //     host: process.env.DATABASE_HOST,
+        //     user: process.env.DATABASE_USER,
+        //     password: process.env.DATABASE_PASSWORD,
+        //     database: "gasbooking",
+        //     port: 3306,
+        //     ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") },
+        // });
 
         this.pool.query("select * from Admin", (err, _) => {
             if (err) {
@@ -42,7 +42,6 @@ class GasBookingDatabase {
             email,
             address,
             phone_number,
-            company,
         },
         callback
     ) {
@@ -203,6 +202,23 @@ class GasBookingDatabase {
             }
         );
     }
+
+    getPendingOrders({username}, callback) {
+        this.pool.query(
+            `SELECT order_id,order_date,order_status from orders natural join (SELECT order_id,order_status from order_status EXCEPT SELECT order_id,order_status from order_status 
+                WHERE order_status="shipped") as c where c.order_id=orders.order_id and orders.username='${username}' ORDER by order_date LIMIT 3;`,
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    callback([]);
+                    return;
+                }
+                console.log(result);
+                callback(result);
+            }
+        );
+    }
+
     getGasCompanies(callback) {
         this.pool.query(`select company_name from dealer`, (err, result) => {
             if (err) {

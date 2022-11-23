@@ -27,8 +27,12 @@ export default function QueryDialog({ open, handleClose }) {
         query: value,
       })
       .then((response) => {
-        setOutput(response.data);
         seterrorOutput(false);
+        if (Array.isArray(response.data)) {
+          setOutput(response.data);
+        } else {
+          setOutput([response.data]);
+        }
       })
       .catch((error) => {
         setOutput(error.response.data.error);
@@ -121,7 +125,14 @@ export default function QueryDialog({ open, handleClose }) {
             }}
           >
             {errorOutput ? (
-              output
+              <p
+                style={{
+                  color: "red",
+                  fontWeight: "bold",
+                }}
+              >
+                {output}
+              </p>
             ) : (
               <table className="table table-striped">
                 <thead>
